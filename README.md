@@ -101,33 +101,10 @@ PORT=5000
 
 ## 🐳 8. Dockerización
 
-### 8.1 `Dockerfile` (ejemplo básico)
-
-```dockerfile
-FROM python:3.10
-
-WORKDIR /app
-
-COPY . .
-
-RUN pip install --no-cache-dir -r requirements.txt
-
-EXPOSE 5000
-
-CMD ["python", "app.py"]
-```
+### 8.1 `Dockerfile`
 
 ### 8.2 Comandos para correr
 
-```bash
-# Build
-docker build -t viajate-app .
-
-# Run
-docker run -p 5000:5000 --env-file .env viajate-app
-```
-
----
 
 ## ▶️ 9. Cómo Usar la API (modo local)
 
@@ -182,7 +159,7 @@ CREATE TABLE interacciones (
 ## 📦 11. Entregables
 
 * 📁 Código en GitHub.
-* 🐳 Imagen Docker en DockerHub.
+* 🐳 Imagen Docker en DockerHub: docker pull leireal/mi_api_proyecto:latest
 * 📘 Documentación técnica completa.
 * 📊 Base de datos con historial de interacciones.
 
