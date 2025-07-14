@@ -4,61 +4,53 @@ import os
 from dotenv import load_dotenv
 import base64
 
-# Cargar clave de API
+# Cargar variables de entorno
 load_dotenv()
 PEXELS_API_KEY = os.getenv("PEXELS_API_KEY")
 
-
-#------------
-
-def set_bg_from_local(image_file):
-    with open(image_file, "rb") as image:
-        encoded = base64.b64encode(image.read()).decode()
-
-    css = f"""
-    <style>
-    [data-testid="stApp"] {{
-        background-image: url("data:image/jpg;base64,{encoded}");
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-        background-attachment: fixed;
-    }}
-    </style>
-    """
-    st.markdown(css, unsafe_allow_html=True)
+# Configuración de página y fondo
 st.set_page_config(layout="wide")
 
-# Inyectar CSS personalizado
+def set_bg_from_local(image_file):
+    if os.path.exists(image_file):
+        with open(image_file, "rb") as image:
+            encoded = base64.b64encode(image.read()).decode()
+
+        css = f"""
+        <style>
+        [data-testid="stApp"] {{
+            background-image: url("data:image/jpg;base64,{encoded}");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }}
+        </style>
+        """
+        st.markdown(css, unsafe_allow_html=True)
+    else:
+        st.warning(f"No se encontró la imagen en: {image_file}")
+
+set_bg_from_local("img/fondo.jpg")
+
+# Estilos adicionales
 st.markdown("""
     <style>
-        html, body, [class*="css"]  {
+        html, body, [class*="css"] {
             color: black !important;
             font-weight: bold !important;
         }
     </style>
 """, unsafe_allow_html=True)
 
-# Ruta a la imagen (ajusta si estás en otra carpeta)
-img_path = "img/fondo.jpg"
-
-# Verifica si el archivo existe antes de usarlo
-if os.path.exists(img_path):
-    set_bg_from_local(img_path)
-else:
-    st.warning(f"No se encontró la imagen en: {img_path}")
-
-
-#---------------
-
+# Título y subtítulo
 st.title("🧳 VIAJATE: TE AYUDO A PREPARAR TU RUTA")
-st.subheader("No lo pienses mas, genera un itinerario de viaje personalizado")
+st.subheader("No lo pienses más, genera un itinerario de viaje personalizado")
 
-# Crear dos columnas: formulario estrecho a la izquierda y resultado amplio a la derecha
+# Columnas para el formulario y resultados
 col1, col2 = st.columns([1, 2])
 
 with col1:
-    #st.subheader("✍️ Tus preferencias")
     with st.form("form_viaje"):
         pais = st.text_input("🌍 País de destino", placeholder="Ej: Colombia")
         dias = st.number_input("📆 Número de días", min_value=1, max_value=30, step=1)
@@ -72,7 +64,7 @@ with col2:
         if not pais:
             st.error("Debes ingresar un país.")
         else:
-            url = "http://127.0.0.1:5000/insertar_param"
+            url = "http://127.0.0.1:5000/insertar_param"  # Cambia si despliegas la API en Render
             headers = {"Content-Type": "application/json"}
             payload = {
                 "pais": pais,
@@ -87,16 +79,13 @@ with col2:
                     response = requests.post(url, json=payload, headers=headers)
                     if response.status_code == 200:
                         data = response.json()
-
                         st.text_area("✍️ Itinerario generado", value=data['itinerario'], height=500, disabled=True)
-
                     else:
                         st.error(f"Error: {response.json().get('Error')}")
                 except Exception as e:
                     st.error(f"No se pudo conectar al servidor Flask: {e}")
 
-
-# Botón de imprimir en PDF---------------------
+# Botón para imprimir PDF
 st.markdown("""
     <div style="text-align: right; margin-top: 1rem;">
         <button onclick="window.print()" style="
@@ -114,8 +103,7 @@ st.markdown("""
     </div>
 """, unsafe_allow_html=True)
 
-#Boton web---------------------
-
+# Botón hacia la web oficial
 st.markdown("""
     <div style="text-align: right; margin-top: 1rem;">
         <a href="https://www.viajate.com" target="_blank">
