@@ -2,20 +2,19 @@ from flask import Flask, request, jsonify
 import psycopg2
 import os
 from dotenv import load_dotenv
-
-
-from llm_service import itinerario  # Asegúrate de que este archivo exista y esté bien definido
+from llm_service import itinerario  
 
 # Cargar variables de entorno
 load_dotenv()
 load_dotenv(override=True)
 
 DB_HOST = os.getenv("DB_HOST")
-DB_PORT = os.getenv("DB_PORT", 5432)  # por si falta, default a 5432
+DB_PORT = os.getenv("DB_PORT", 5432) 
 DB_NAME = os.getenv("DB_NAME")
 DB_USER = os.getenv("DB_USER")
 DB_PASSWORD = os.getenv("DB_PASSWORD")
 
+#para compobar
 print("DEBUG ENV:")
 print(" DB_HOST:", DB_HOST)
 print(" DB_PORT:", DB_PORT)

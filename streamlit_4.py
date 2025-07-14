@@ -4,7 +4,7 @@ import os
 from dotenv import load_dotenv
 import base64
 
-# Cargar variables de entorno
+# Se cargan variables de entorno
 load_dotenv()
 PEXELS_API_KEY = os.getenv("PEXELS_API_KEY")
 
@@ -33,7 +33,7 @@ def set_bg_from_local(image_file):
 
 set_bg_from_local("img/fondo.jpg")
 
-# Estilos adicionales
+# Estilos de letra
 st.markdown("""
     <style>
         html, body, [class*="css"] {
